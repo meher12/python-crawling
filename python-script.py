@@ -113,4 +113,3 @@ table = pd.read_table("listings.csv", sep=r',',
                                     })
 df = pd.DataFrame(table)
 df.to_csv('listings.csv',  sep=',', index=False, header=True)
-
