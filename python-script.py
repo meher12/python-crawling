@@ -65,23 +65,20 @@ with open(input_file, 'r') as csv_file:
                             #Name
                             cells2 = row.find_all('h3')
                             for cell in cells2:
-                                cell_data2 = cell.text.strip()
-                                cleaned_cell_data2 = re.sub(r'\r?\n', ' ', cell_data2)
-                                row_data.append(cleaned_cell_data2)
+                                cell_data2 = cell.text
+                                row_data.append(cell_data2)
 
                             #Address
                             cells4 = row.find_all('a', class_='pj-lb pj-link')
                             for cell in cells4:
-                                cell_data4 = cell.text.strip().replace("Voir le plan", "")
-                                cleaned_cell_data4 = re.sub(r'\r?\n', ' ', cell_data4)
-                                row_data.append(cleaned_cell_data4)
+                                cell_data4 = cell.text.replace("Voir le plan", "")
+                                row_data.append(cell_data4)
 
                             #Tel
                             cells3 = row.find_all('div', class_='number-contact')
                             for cell in cells3:
-                                cell_data3 = cell.text.strip().replace("Opposé aux opérations de marketing", "")
-                                cleaned_cell_data3 = re.sub(r'\r?\n', ' ', cell_data3)
-                                row_data.append(cleaned_cell_data3)
+                                cell_data3 = cell.text.replace("Opposé aux opérations de marketing", "")
+                                row_data.append(cell_data3)
 
                             data.append(row_data)
 
@@ -108,10 +105,9 @@ def strip(text):
 
 
 table = pd.read_table("listings.csv", sep=r',',
-                      names=["Name", "Adresse", "ZipCode" "Telephone1", "Telephone2"],
+                      names=["Name", "FullAdresse", "Telephone1", "Telephone2"],
                       converters = {'Name' : strip,
-                                    'Adresse' : strip,
-                                    'ZipCode' : strip,
+                                    'FullAdresse' : strip,
                                     'Telephone1' : strip,
                                     'Telephone2' : strip,
                                     
