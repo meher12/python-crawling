@@ -56,12 +56,7 @@ with open(input_file, 'r') as csv_file:
                         rows = list_li.find_all('li')
                         for row in rows:
                             row_data = []
-                            '''
-                            cells1 = row.find_all('span', class_='bi-activity small')
-                            for cell in cells1:
-                                cell_data1 = cell.text.strip()
-                                row_data.append(cell_data1)
-                            '''
+                         
                             #Name
                             cells2 = row.find_all('h3')
                             for cell in cells2:
@@ -72,14 +67,18 @@ with open(input_file, 'r') as csv_file:
                             cells4 = row.find_all('a', class_='pj-lb pj-link')
                             for cell in cells4:
                                 cell_data4 = cell.text.replace("Voir le plan", "")
-                                row_data.append(cell_data4)
+                                zipcode_match = re.search(r'\b\d{5}\b', cell_data4)
+                                if zipcode_match:
+                                    zipcode = zipcode_match.group(0)
+                                else:
+                                    print("No zip code found.")
+                                row_data.append({"address": cell_data4.strip(), "zip_code": zipcode})
 
                             #Tel
                             cells3 = row.find_all('div', class_='number-contact')
                             for cell in cells3:
                                 cell_data3 = cell.text.replace("Opposé aux opérations de marketing", "")
                                 row_data.append(cell_data3)
-
                             data.append(row_data)
 
                     
@@ -105,7 +104,7 @@ def strip(text):
 
 
 table = pd.read_table("listings.csv", sep=r',',
-                      names=["Name", "FullAdresse", "Telephone1", "Telephone2"],
+                      names=["Name", "FullAdresse",  "Telephone1", "Telephone2"],
                       converters = {'Name' : strip,
                                     'FullAdresse' : strip,
                                     'Telephone1' : strip,
