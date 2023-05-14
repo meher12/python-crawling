@@ -66,13 +66,14 @@ with open(input_file, 'r') as csv_file:
                             #Address
                             cells4 = row.find_all('a', class_='pj-lb pj-link')
                             for cell in cells4:
-                                cell_data4 = cell.text.replace("Voir le plan", "")
+                                cell_data4 = cell.text.replace("Voir le plan", "").replace(",", "")
                                 zipcode_match = re.search(r'\b\d{5}\b', cell_data4)
                                 if zipcode_match:
                                     zipcode = zipcode_match.group(0)
                                 else:
                                     print("No zip code found.")
-                                row_data.append({"address": cell_data4.strip(), "zip_code": zipcode})
+                                row_data.append(cell_data4.strip())
+                                row_data.append(zipcode.strip())
 
                             #Tel
                             cells3 = row.find_all('div', class_='number-contact')
@@ -83,7 +84,7 @@ with open(input_file, 'r') as csv_file:
 
                     
                     with open('listings.csv', 'w', newline='', encoding='utf-8') as csvfile:
-                        writer = csv.writer(csvfile)
+                        writer = csv.writer(csvfile, delimiter=',')
                         #writer.writerow(['Name', 'Telephone'])
                         writer.writerows(data)
                     
@@ -103,13 +104,13 @@ def strip(text):
         return text
 
 
-table = pd.read_table("listings.csv", sep=r',',
-                      names=["Name", "FullAdresse",  "Telephone1", "Telephone2"],
+table = pd.read_table("listings.csv", sep='\t',
+                      names=["Name", "FullAdresse", "zipCode",  "Telephone1", "Telephone2"],
                       converters = {'Name' : strip,
                                     'FullAdresse' : strip,
+                                    'zipCode' : strip,
                                     'Telephone1' : strip,
                                     'Telephone2' : strip,
-                                    
                                     })
 df = pd.DataFrame(table)
-df.to_csv('listings.csv',  sep=',', index=False, header=True)
+df.to_csv('listings.csv',  sep='\t', index=False, header=True)
